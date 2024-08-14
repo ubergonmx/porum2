@@ -16,6 +16,7 @@ import { UserAvatar } from "@/components/user-avatar";
 import { SignOutItem } from "./sign-out-item";
 import { Suspense } from "react";
 import { HeaderActionsFallback } from "./header-actions-fallback";
+import icon from "@/assets/icon.png";
 
 export default async function Header() {
   return (
@@ -29,8 +30,8 @@ export default async function Header() {
             className="size-8 rounded"
             width="50"
             height="50"
-            src="/icon.png"
-            alt="hero image"
+            src={icon}
+            alt="logo"
           />
           <span className="hidden text-sm font-medium text-zinc-700 md:block">
             {APP_TITLE}
@@ -75,7 +76,6 @@ async function HeaderActions() {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="secondary" size="icon" className="rounded-full">
-              {/* <CircleUser className="size-5" /> */}
               <UserAvatar user={{ image: user.avatar, name: user.username }} />
               <span className="sr-only">Toggle user menu</span>
             </Button>
