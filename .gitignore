@@ -34,3 +34,16 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# eslint
+.eslintcache
+
+# env
+.env
+
+# Images
+/public/avatars
+# But include default.png avatar
+!/public/avatars/default.png
+
+certificates

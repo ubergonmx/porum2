@@ -1,0 +1,15 @@
+services:
+  porum-db:
+    image: postgres
+    restart: always
+    container_name: porum-db
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_PASSWORD: secret-password
+      PGDATA: /data/postgres
+    volumes:
+      - postgres:/data/postgres
+
+volumes:
+  postgres:
