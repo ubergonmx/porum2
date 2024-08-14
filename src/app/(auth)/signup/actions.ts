@@ -4,7 +4,6 @@ import { signupSchema, SignupInput } from "@/lib/validators/auth";
 import { database as db } from "@/db/database";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { generateIdFromEntropySize } from "lucia";
 import { hash } from "@node-rs/argon2";
 import { users } from "@/db/schema";
 import { lucia } from "@/lib/auth";
