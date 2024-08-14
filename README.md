@@ -1,36 +1,81 @@
+# Porum 2 (NextJS)
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
 
-First, run the development server:
+1. Duplicate `.env.example` and rename to `.env` (fill the necessary fields).
+
+2. Install dependencies.
+
+```bash
+npm i
+```
+
+3. Setup Husky (for pre-commit).
+
+```bash
+npx husky install
+```
+
+> Note (for contributors):
+> If you're facing errors when pushing a commit, run the following.
+>
+> ```bash
+> # delete ".git/hooks/" folder manually
+> # or run the line below in PowerShell
+> rm -rf .git/hooks/
+> npm uninstall husky
+> npm install --save-dev husky
+> ```
+>
+> If you're using GitHub Desktop, make sure to add `C:\Program Files\Git\bin`
+> to your **User** and **System** PATH.
+> Learn more in the following solutions: [Solution 1](https://github.com/desktop/desktop/issues/17385#issuecomment-1718170235) and [Solution 2](https://github.com/desktop/desktop/issues/12586#issuecomment-1822189613)
+
+4. Run database with docker
+
+```bash
+docker compose up
+```
+
+5. Push schema to database
+
+```bash
+npm run db:push
+```
+
+6. Run the development server.
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+7. Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Other
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+### View database
 
-## Learn More
+Simply run the following command to open Drizzle Studio. If you have any issues, check this [solution](https://github.com/sameersbn/docker-postgresql/issues/112#issuecomment-579712540)
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+npm run db:studio
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Full reset database
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+Go to `local.drizzle.studio` on your browser after running `npm run db:studio`, paste the following into SQL Runner and then execute:
 
-## Deploy on Vercel
+```
+DO $$
+DECLARE
+  r RECORD;
+BEGIN
+  FOR r IN (SELECT tablename FROM pg_tables WHERE schemaname = 'public') LOOP
+      EXECUTE 'DROP TABLE IF EXISTS public.' || quote_ident(r.tablename) || ' CASCADE';
+  END LOOP;
+END $$;
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Run `npm run db:push` to create the necessary tables to PostgreSQL.
