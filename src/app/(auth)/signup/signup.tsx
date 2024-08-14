@@ -27,19 +27,19 @@ import { PasswordInput } from "@/components/password-input";
 import { SubmitButton } from "@/components/submit-button";
 import Link from "next/link";
 import { signupSchema, SignupInput } from "@/lib/validators/auth";
-// import { signup } from "./actions";
+import { signup } from "./actions";
 import Image, { StaticImageData } from "next/image";
 import defaultAvatar from "@/assets/avatars/defaultAvatar.png";
 
 import { APP_TITLE } from "@/lib/constants";
-// type FormFieldKey =
-//   | "firstName"
-//   | "lastName"
-//   | "username"
-//   | "email"
-//   | "password"
-//   | "phone"
-//   | "avatar";
+type FormFieldKey =
+  | "firstName"
+  | "lastName"
+  | "username"
+  | "email"
+  | "password"
+  | "phone"
+  | "avatar";
 export default function Signup() {
   const [isPending, startTransition] = useTransition();
   const [signupError, setSignupError] = useState<string | null>(null);
@@ -70,17 +70,17 @@ export default function Signup() {
         formData.append("avatar", values.avatar);
       }
       delete values.avatar;
-      // signup(values, formData).then((result) => {
-      //   if (result?.fieldError) {
-      //     Object.entries(result.fieldError).forEach(([field, message]) => {
-      //       form.setError(field as FormFieldKey, {
-      //         type: "manual",
-      //         message,
-      //       });
-      //     });
-      //   }
-      //   if (result?.formError) setSignupError(result.formError);
-      // });
+      signup(values, formData).then((result) => {
+        if (result?.fieldError) {
+          Object.entries(result.fieldError).forEach(([field, message]) => {
+            form.setError(field as FormFieldKey, {
+              type: "manual",
+              message,
+            });
+          });
+        }
+        if (result?.formError) setSignupError(result.formError);
+      });
     });
   }
 
