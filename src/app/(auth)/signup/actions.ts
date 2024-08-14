@@ -1,21 +1,21 @@
 "use server";
 
 import { signupSchema, SignupInput } from "@/lib/validators/auth";
-// import { database as db } from "@/db/database";
-// import { cookies } from "next/headers";
+import { database as db } from "@/db/database";
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 // import { generateIdFromEntropySize } from "lucia";
-// import { hash } from "@node-rs/argon2";
-// import { users } from "@/db/schema";
-// import { lucia } from "@/lib/auth";
+import { hash } from "@node-rs/argon2";
+import { users } from "@/db/schema";
+import { lucia } from "@/lib/auth";
 import { Paths } from "@/lib/constants";
 import { ActionResponse } from "@/lib/types";
 // import { writeFile as fsWriteFile } from "fs/promises";
 import { env } from "@/env";
 import { standardRateLimit, getIP } from "@/lib/ratelimit";
-// import { argon2idConfig } from "@/lib/auth/hash";
-// import { EmailTemplate, sendMail } from "@/lib/email";
-// import { generateEmailVerificationCode } from "../verify-email/actions";
+import { argon2idConfig } from "@/lib/auth/hash";
+import { EmailTemplate, sendMail } from "@/lib/email";
+import { generateEmailVerificationCode } from "../verify-email/actions";
 import { isRedirectError } from "next/dist/client/components/redirect";
 import {
   FormError,
@@ -26,7 +26,7 @@ import {
 
 export async function signup(
   values: SignupInput,
-  formData: FormData,
+  formData: FormData
 ): Promise<ActionResponse<SignupInput>> {
   try {
     const { success } = await standardRateLimit.limit(getIP() ?? values.email);
@@ -58,36 +58,42 @@ export async function signup(
       });
     }
 
-    // const { firstName, lastName, username, email, password, avatar } =
-    //   parsed.data;
-    // const phone = values.phone;
+    const {
+      firstName,
+      lastName,
+      username,
+      email,
+      password,
+      // avatar
+    } = parsed.data;
+    const phone = values.phone;
 
-    // const existingUsername = await db.query.users.findFirst({
-    //   where: (table, { eq }) => eq(table.username, username),
-    //   columns: { username: true },
-    // });
-    // if (existingUsername) {
-    //   throw new FormError("SignupError", "Username already exists", {
-    //     fieldError: {
-    //       username: "Username already exists",
-    //     },
-    //     details: `IP: ${getIP()}`,
-    //   });
-    // }
+    const existingUsername = await db.query.users.findFirst({
+      where: (table, { eq }) => eq(table.username, username),
+      columns: { username: true },
+    });
+    if (existingUsername) {
+      throw new FormError("SignupError", "Username already exists", {
+        fieldError: {
+          username: "Username already exists",
+        },
+        details: `IP: ${getIP()}`,
+      });
+    }
 
-    // const existingEmail = await db.query.users.findFirst({
-    //   where: (table, { eq }) => eq(table.email, email),
-    //   columns: { email: true },
-    // });
+    const existingEmail = await db.query.users.findFirst({
+      where: (table, { eq }) => eq(table.email, email),
+      columns: { email: true },
+    });
 
-    // if (existingEmail) {
-    //   throw new FormError("SignupError", "Email already exists", {
-    //     fieldError: {
-    //       email: "Cannot create account with that email",
-    //     },
-    //     details: `IP: ${getIP()}`,
-    //   });
-    // }
+    if (existingEmail) {
+      throw new FormError("SignupError", "Email already exists", {
+        fieldError: {
+          email: "Cannot create account with that email",
+        },
+        details: `IP: ${getIP()}`,
+      });
+    }
 
     // let url: string | undefined;
     // if (avatar) {
@@ -105,41 +111,41 @@ export async function signup(
     //     url = res.url;
     //   }
     // }
-    // const hashedPassword = await hash(password, argon2idConfig);
+    const hashedPassword = await hash(password, argon2idConfig);
 
-    // const [user] = await db
-    //   .insert(users)
-    //   .values({
-    //     firstName,
-    //     lastName,
-    //     username,
-    //     email,
-    //     password: hashedPassword,
-    //     phoneNumber: phone,
-    //     role: "user",
-    //     avatar: url,
-    //   })
-    //   .returning();
+    const [user] = await db
+      .insert(users)
+      .values({
+        firstName,
+        lastName,
+        username,
+        email,
+        password: hashedPassword,
+        phoneNumber: phone,
+        role: "user",
+        // avatar: url,
+      })
+      .returning();
 
-    // const verificationCode = await generateEmailVerificationCode(
-    //   user.id,
-    //   email,
-    // );
-    // await sendMail(email, EmailTemplate.EmailVerification, {
-    //   code: verificationCode,
-    // });
+    const verificationCode = await generateEmailVerificationCode(
+      user.id,
+      email
+    );
+    await sendMail(email, EmailTemplate.EmailVerification, {
+      code: verificationCode,
+    });
 
-    // const session = await lucia.createSession(user.id, {});
-    // const sessionCookie = lucia.createSessionCookie(session.id);
-    // cookies().set(
-    //   sessionCookie.name,
-    //   sessionCookie.value,
-    //   sessionCookie.attributes,
-    // );
+    const session = await lucia.createSession(user.id, {});
+    const sessionCookie = lucia.createSessionCookie(session.id);
+    cookies().set(
+      sessionCookie.name,
+      sessionCookie.value,
+      sessionCookie.attributes
+    );
 
-    // console.log(
-    //   `[SIGNUP] User created successfully: ${user.id}(${user.username})`,
-    // );
+    console.log(
+      `[SIGNUP] User created successfully: ${user.id}(${user.username})`
+    );
     return redirect(Paths.VerifyEmail);
   } catch (error: any | FormError<SignupInput>) {
     if (isRedirectError(error)) throw error; // thrown exclusively because of redirect
