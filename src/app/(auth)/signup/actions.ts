@@ -4,13 +4,12 @@ import { signupSchema, SignupInput } from "@/lib/validators/auth";
 import { database as db } from "@/db/database";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-// import { generateIdFromEntropySize } from "lucia";
+import { generateIdFromEntropySize } from "lucia";
 import { hash } from "@node-rs/argon2";
 import { users } from "@/db/schema";
 import { lucia } from "@/lib/auth";
 import { Paths } from "@/lib/constants";
 import { ActionResponse } from "@/lib/types";
-// import { writeFile as fsWriteFile } from "fs/promises";
 import { env } from "@/env";
 import { standardRateLimit, getIP } from "@/lib/ratelimit";
 import { argon2idConfig } from "@/lib/auth/hash";
@@ -22,7 +21,7 @@ import {
   formErrorStringify,
   unknownErrorStringify,
 } from "@/lib/error";
-// import { uploadFiles } from "@/lib/uploadthing";
+import { uploadFiles } from "@/lib/uploadthing";
 
 export async function signup(
   values: SignupInput,
@@ -58,14 +57,8 @@ export async function signup(
       });
     }
 
-    const {
-      firstName,
-      lastName,
-      username,
-      email,
-      password,
-      // avatar
-    } = parsed.data;
+    const { firstName, lastName, username, email, password, avatar } =
+      parsed.data;
     const phone = values.phone;
 
     const existingUsername = await db.query.users.findFirst({
@@ -95,22 +88,23 @@ export async function signup(
       });
     }
 
-    // let url: string | undefined;
-    // if (avatar) {
-    //   if (env.STORAGE === "local") {
-    //     url = `${Date.now()}-${generateIdFromEntropySize(5)}-${avatar.name.replaceAll(" ", "_")}`;
-    //     const buffer = Buffer.from(await avatar.arrayBuffer());
-    //     const fullPath = process.cwd() + "/" + env.LOCAL_AVATAR_PATH + url;
-    //     await fsWriteFile(fullPath, buffer);
+    let url: string | undefined;
+    if (avatar) {
+      if (env.STORAGE === "local") {
+        const fsWriteFile = (await import("fs/promises")).writeFile;
+        url = `${Date.now()}-${generateIdFromEntropySize(5)}-${avatar.name.replaceAll(" ", "_")}`;
+        const buffer = Buffer.from(await avatar.arrayBuffer());
+        const fullPath = process.cwd() + "/" + env.LOCAL_AVATAR_PATH + url;
+        await fsWriteFile(fullPath, buffer);
 
-    //     console.log("[SIGNUP] Avatar saved to", fullPath);
-    //   } else if (env.STORAGE === "online") {
-    //     const [res] = await uploadFiles("avatar", {
-    //       files: [avatar],
-    //     });
-    //     url = res.url;
-    //   }
-    // }
+        console.log("[SIGNUP] Avatar saved to", fullPath);
+      } else if (env.STORAGE === "online") {
+        const [res] = await uploadFiles("avatar", {
+          files: [avatar],
+        });
+        url = res.url;
+      }
+    }
     const hashedPassword = await hash(password, argon2idConfig);
 
     const [user] = await db
