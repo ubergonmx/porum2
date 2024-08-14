@@ -14,8 +14,8 @@ import { writeFile as fsWriteFile } from "fs/promises";
 import { env } from "@/env";
 import { standardRateLimit, getIP } from "@/lib/ratelimit";
 import { argon2idConfig } from "@/lib/auth/hash";
-import { EmailTemplate, sendMail } from "@/lib/email";
-import { generateEmailVerificationCode } from "../verify-email/actions";
+// import { EmailTemplate, sendMail } from "@/lib/email";
+// import { generateEmailVerificationCode } from "../verify-email/actions";
 import { isRedirectError } from "next/dist/client/components/redirect";
 import {
   FormError,
