@@ -1,5 +1,5 @@
 {
-  "name": "porum-nextjs",
+  "name": "porum2",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -8,6 +8,7 @@
     "build": "next build",
     "start": "npm run db:generate && npm run db:migrate && next start",
     "lint": "next lint",
+    "types": "tsc --noEmit --pretty",
     "prettier": "prettier --write \"**/*.+(js|jsx|ts|tsx|json|yml|yaml|md|css)\"",
     "clean-local": "npx git-removed-branches --prune",
     "db:push": "drizzle-kit push --config=drizzle.config.ts",
