@@ -26,7 +26,7 @@ import { uploadFiles } from "@/lib/uploadthing";
 
 export async function signup(
   values: SignupInput,
-  formData: FormData,
+  formData: FormData
 ): Promise<ActionResponse<SignupInput>> {
   try {
     const { success } = await standardRateLimit.limit(getIP() ?? values.email);
@@ -121,24 +121,24 @@ export async function signup(
       })
       .returning();
 
-    const verificationCode = await generateEmailVerificationCode(
-      user.id,
-      email,
-    );
-    await sendMail(email, EmailTemplate.EmailVerification, {
-      code: verificationCode,
-    });
+    // const verificationCode = await generateEmailVerificationCode(
+    //   user.id,
+    //   email,
+    // );
+    // await sendMail(email, EmailTemplate.EmailVerification, {
+    //   code: verificationCode,
+    // });
 
     const session = await lucia.createSession(user.id, {});
     const sessionCookie = lucia.createSessionCookie(session.id);
     cookies().set(
       sessionCookie.name,
       sessionCookie.value,
-      sessionCookie.attributes,
+      sessionCookie.attributes
     );
 
     console.log(
-      `[SIGNUP] User created successfully: ${user.id}(${user.username})`,
+      `[SIGNUP] User created successfully: ${user.id}(${user.username})`
     );
     return redirect(Paths.VerifyEmail);
   } catch (error: any | FormError<SignupInput>) {
