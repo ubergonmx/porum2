@@ -90,20 +90,24 @@ export async function signup(
 
     let url: string | undefined;
     if (avatar) {
-      if (env.STORAGE === "local") {
-        const fsWriteFile = (await import("fs/promises")).writeFile;
-        url = `${Date.now()}-${generateIdFromEntropySize(5)}-${avatar.name.replaceAll(" ", "_")}`;
-        const buffer = Buffer.from(await avatar.arrayBuffer());
-        const fullPath = process.cwd() + "/" + env.LOCAL_AVATAR_PATH + url;
-        await fsWriteFile(fullPath, buffer);
+      // Uncomment this block if you are building locally
+      // and want to save the avatar locally
+      //   if (env.STORAGE === "local") {
+      //     const fsWriteFile = (await import("fs/promises")).writeFile;
+      //     url = `${Date.now()}-${generateIdFromEntropySize(5)}-${avatar.name.replaceAll(" ", "_")}`;
+      //     const buffer = Buffer.from(await avatar.arrayBuffer());
+      //     const fullPath = process.cwd() + "/" + env.LOCAL_AVATAR_PATH + url;
+      //     await fsWriteFile(fullPath, buffer);
 
-        console.log("[SIGNUP] Avatar saved to", fullPath);
-      } else if (env.STORAGE === "online") {
-        const [res] = await uploadFiles("avatar", {
-          files: [avatar],
-        });
-        url = res.url;
-      }
+      //     console.log("[SIGNUP] Avatar saved to", fullPath);
+      //   } else if (env.STORAGE === "online") {
+      const [res] = await uploadFiles("avatar", {
+        files: [avatar],
+      });
+      url = res.url;
+
+      console.log("[SIGNUP] Avatar uploaded to", url);
+      //   }
     }
     const hashedPassword = await hash(password, argon2idConfig);
 
