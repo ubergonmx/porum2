@@ -23,7 +23,7 @@ export type PropsMap = {
 
 const getEmailTemplate = <T extends EmailTemplate>(
   template: T,
-  props: PropsMap[NoInfer<T>],
+  props: PropsMap[NoInfer<T>]
 ) => {
   switch (template) {
     case EmailTemplate.EmailVerification:
@@ -32,7 +32,7 @@ const getEmailTemplate = <T extends EmailTemplate>(
         body: render(
           <EmailVerificationTemplate
             {...(props as PropsMap[EmailTemplate.EmailVerification])}
-          />,
+          />
         ),
       };
     case EmailTemplate.PasswordReset:
@@ -41,7 +41,7 @@ const getEmailTemplate = <T extends EmailTemplate>(
         body: render(
           <ResetPasswordTemplate
             {...(props as PropsMap[EmailTemplate.PasswordReset])}
-          />,
+          />
         ),
       };
     default:
@@ -63,7 +63,7 @@ const transporter = createTransport(smtpConfig as TransportOptions);
 export const sendMail = async <T extends EmailTemplate>(
   to: string,
   template: T,
-  props: PropsMap[NoInfer<T>],
+  props: PropsMap[NoInfer<T>]
 ) => {
   if (env.NODE_ENV !== "production") {
     console.log(
@@ -72,12 +72,12 @@ export const sendMail = async <T extends EmailTemplate>(
       "with template:",
       template,
       "and props:",
-      props,
+      props
     );
     return;
   }
 
   const { subject, body } = getEmailTemplate(template, props);
-
+  console.log("[SIGNUP-MAIL] Email sent to:", to, "with subject:", subject);
   return transporter.sendMail({ from: EMAIL_SENDER, to, subject, html: body });
 };

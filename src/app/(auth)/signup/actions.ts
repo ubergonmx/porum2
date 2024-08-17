@@ -128,6 +128,8 @@ export async function signup(
       user.id,
       email
     );
+
+    console.log("[SIGNUP] Verification code generated:", verificationCode);
     await sendMail(email, EmailTemplate.EmailVerification, {
       code: verificationCode,
     });
@@ -143,9 +145,10 @@ export async function signup(
     console.log(
       `[SIGNUP] User created successfully: ${user.id}(${user.username})`
     );
+
     return redirect(Paths.VerifyEmail);
   } catch (error: any | FormError<SignupInput>) {
-    if (isRedirectError(error)) throw error; // thrown exclusively because of redirect
+    // if (isRedirectError(error)) throw error; // thrown exclusively because of redirect
 
     let errorMessage = "An error occurred, please try again later";
     if (error instanceof FormError) {
