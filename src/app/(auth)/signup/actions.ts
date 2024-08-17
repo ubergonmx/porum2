@@ -14,7 +14,7 @@ import { standardRateLimit, getIP } from "@/lib/ratelimit";
 import { argon2idConfig } from "@/lib/auth/hash";
 import { EmailTemplate, sendMail } from "@/lib/email";
 import { generateEmailVerificationCode } from "../verify-email/actions";
-import { isRedirectError } from "next/dist/client/components/redirect";
+// import { isRedirectError } from "next/dist/client/components/redirect";
 import {
   FormError,
   formErrorStringify,
@@ -24,7 +24,7 @@ import { uploadFiles } from "@/lib/uploadthing";
 
 export async function signup(
   values: SignupInput,
-  formData: FormData
+  formData: FormData,
 ): Promise<ActionResponse<SignupInput>> {
   try {
     const { success } = await standardRateLimit.limit(getIP() ?? values.email);
@@ -126,7 +126,7 @@ export async function signup(
 
     const verificationCode = await generateEmailVerificationCode(
       user.id,
-      email
+      email,
     );
 
     console.log("[SIGNUP] Verification code generated:", verificationCode);
@@ -139,11 +139,11 @@ export async function signup(
     cookies().set(
       sessionCookie.name,
       sessionCookie.value,
-      sessionCookie.attributes
+      sessionCookie.attributes,
     );
 
     console.log(
-      `[SIGNUP] User created successfully: ${user.id}(${user.username})`
+      `[SIGNUP] User created successfully: ${user.id}(${user.username})`,
     );
 
     return redirect(Paths.VerifyEmail);
