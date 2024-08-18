@@ -9,25 +9,22 @@ export const ourFileRouter = {
   avatar: f({ image: { maxFileSize: `${MAX_FILE_SIZE}MB` } })
     .middleware(async () => {
       const { user } = await validateRequest();
-
       if (!user) throw new UploadThingError("Unauthorized");
-
       return { userId: user.id };
     })
     .onUploadComplete(async ({ metadata, file }) => {
-      console.log("Upload complete for userId:", metadata.userId);
-
+      console.log(
+        "[UPLOADTHING_AVATAR] Upload complete for userId:",
+        metadata.userId,
+      );
       console.log("file url", file.url);
-
-      return { uploadedBy: metadata.userId };
+      return { fileUrl: file.url };
     }),
   attachment: f({ image: { maxFileSize: `${MAX_FILE_SIZE}MB` } })
     .middleware(async () => {
       // This code runs on your server before upload
       const { user } = await validateRequest();
-
       if (!user) throw new UploadThingError("Unauthorized");
-
       // Whatever is returned here is accessible in onUploadComplete as `metadata`
       return { userId: user.id };
     })
@@ -37,9 +34,7 @@ export const ourFileRouter = {
         "[UPLOADTHING_ATTACHMENT] Upload complete for userId:",
         metadata.userId,
       );
-
       console.log("file url", file.url);
-
       return { fileUrl: file.url };
     }),
 } satisfies FileRouter;

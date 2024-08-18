@@ -14,13 +14,13 @@ import { standardRateLimit, getIP } from "@/lib/ratelimit";
 import { argon2idConfig } from "@/lib/auth/hash";
 import { EmailTemplate, sendMail } from "@/lib/email";
 import { generateEmailVerificationCode } from "../verify-email/actions";
-// import { isRedirectError } from "next/dist/client/components/redirect";
+import { isRedirectError } from "next/dist/client/components/redirect";
 import {
   FormError,
   formErrorStringify,
   unknownErrorStringify,
 } from "@/lib/error";
-import { uploadFiles } from "@/lib/uploadthing";
+import { utapi } from "@/lib/uploadthing";
 
 export async function signup(
   values: SignupInput,
@@ -91,22 +91,24 @@ export async function signup(
     if (avatar) {
       // Uncomment this block if you are building locally
       // and want to save the avatar locally
-      //   if (env.STORAGE === "local") {
-      //     const fsWriteFile = (await import("fs/promises")).writeFile;
-      //     url = `${Date.now()}-${generateIdFromEntropySize(5)}-${avatar.name.replaceAll(" ", "_")}`;
-      //     const buffer = Buffer.from(await avatar.arrayBuffer());
-      //     const fullPath = process.cwd() + "/" + env.LOCAL_AVATAR_PATH + url;
-      //     await fsWriteFile(fullPath, buffer);
+      // if (env.STORAGE === "local") {
+      //   const fsWriteFile = (await import("fs/promises")).writeFile;
+      //   url = `${Date.now()}-${generateIdFromEntropySize(5)}-${avatar.name.replaceAll(" ", "_")}`;
+      //   const buffer = Buffer.from(await avatar.arrayBuffer());
+      //   const fullPath = process.cwd() + "/" + env.LOCAL_AVATAR_PATH + url;
+      //   await fsWriteFile(fullPath, buffer);
+      //   console.log("[SIGNUP] Avatar saved to", fullPath);
+      // } else if (env.STORAGE === "online") { ... }
 
-      //     console.log("[SIGNUP] Avatar saved to", fullPath);
-      //   } else if (env.STORAGE === "online") {
-      const [res] = await uploadFiles("avatar", {
-        files: [avatar],
-      });
-      url = res.url;
-
+      const res = await utapi.uploadFiles(avatar);
+      if (res.error) {
+        throw new FormError("SignupError", "Avatar upload failed", {
+          userMessage: "Avatar upload failed, please try again",
+          details: `IP: ${getIP()}, Code: ${res.error.code}, Message: ${res.error.message}`,
+        });
+      }
+      url = res.data?.url;
       console.log("[SIGNUP] Avatar uploaded to", url);
-      //   }
     }
     const hashedPassword = await hash(password, argon2idConfig);
 
@@ -120,7 +122,7 @@ export async function signup(
         password: hashedPassword,
         phoneNumber: phone,
         role: "user",
-        // avatar: url,
+        avatar: url,
       })
       .returning();
 
@@ -148,7 +150,7 @@ export async function signup(
 
     return redirect(Paths.VerifyEmail);
   } catch (error: any | FormError<SignupInput>) {
-    // if (isRedirectError(error)) throw error; // thrown exclusively because of redirect
+    if (isRedirectError(error)) return { success: true };
 
     let errorMessage = "An error occurred, please try again later";
     if (error instanceof FormError) {

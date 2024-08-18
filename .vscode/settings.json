@@ -18,8 +18,10 @@
     "lucide",
     "Porum",
     "ratelimit",
+    "signup",
     "Subporum",
     "tanstack",
-    "uploadthing"
+    "uploadthing",
+    "utapi"
   ]
 }
