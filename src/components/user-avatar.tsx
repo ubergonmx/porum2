@@ -26,6 +26,7 @@ export function UserAvatar({
             src={avatarURL}
             alt="profile picture"
             referrerPolicy="no-referrer"
+            className="object-cover"
           />
         </div>
       ) : (
