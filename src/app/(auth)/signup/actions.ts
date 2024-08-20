@@ -20,7 +20,7 @@ import {
   formErrorStringify,
   unknownErrorStringify,
 } from "@/lib/error";
-import { utapi } from "@/lib/uploadthing";
+import { UTApi } from "uploadthing/server";
 
 export async function signup(
   values: SignupInput,
@@ -100,7 +100,7 @@ export async function signup(
       //   console.log("[SIGNUP] Avatar saved to", fullPath);
       // } else if (env.STORAGE === "online") { ... }
 
-      const res = await utapi.uploadFiles(avatar);
+      const res = await new UTApi().uploadFiles(avatar);
       if (res.error) {
         throw new FormError("SignupError", "Avatar upload failed", {
           userMessage: "Avatar upload failed, please try again",
