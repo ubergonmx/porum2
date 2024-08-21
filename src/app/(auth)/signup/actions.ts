@@ -150,7 +150,7 @@ export async function signup(
 
     return redirect(Paths.VerifyEmail);
   } catch (error: any | FormError<SignupInput>) {
-    if (isRedirectError(error)) throw error;
+    if (isRedirectError(error)) return { formError: error.message };
 
     let errorMessage = "An error occurred, please try again later";
     if (error instanceof FormError) {
