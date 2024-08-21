@@ -16,6 +16,7 @@ import React, { useState } from "react";
 
 import { updateUser, deleteUser } from "./actions";
 import { DialogClose } from "@radix-ui/react-dialog";
+import { useRouter } from "next/navigation";
 
 interface UserActionsProps {
   userId: string;
@@ -23,6 +24,7 @@ interface UserActionsProps {
 }
 
 export default function UserActions({ userId, username }: UserActionsProps) {
+  const router = useRouter();
   const [editUserId, setEditUserId] = useState<string>("");
   const [deleteUserId, setDeleteUserId] = useState<string>("");
   const [editedUsername, setEditedUsername] = useState<string>(username);
@@ -46,10 +48,12 @@ export default function UserActions({ userId, username }: UserActionsProps) {
     await updateUser(userId, editedUsername);
 
     setEditedUsername(editedUsername);
+    router.refresh();
   };
 
   const handleDeleteUser = async () => {
     await deleteUser(userId);
+    router.refresh();
   };
 
   return (

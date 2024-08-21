@@ -10,11 +10,9 @@ export default async function Dashboard() {
 
   if (user) {
     if (user.role !== "admin") {
-      console.log("User is not an admin");
       return redirect(Paths.Home);
     }
   } else {
-    console.log("User is not logged in");
     return redirect(Paths.Login);
   }
 
