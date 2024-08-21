@@ -52,7 +52,7 @@ export const VerifyCode = ({
         variant: "destructive",
       });
     }
-  }, [resendState?.error, resendState?.success]);
+  }, [resendState?.error, resendState?.success, toast]);
 
   useEffect(() => {
     if (verifyEmailState?.error) {
@@ -62,7 +62,7 @@ export const VerifyCode = ({
         variant: "destructive",
       });
     }
-  }, [verifyEmailState?.error]);
+  }, [verifyEmailState?.error, toast]);
 
   return (
     <div className="flex flex-col gap-2">
