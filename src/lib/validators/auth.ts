@@ -23,51 +23,30 @@ export const signupSchema = z.object({
   firstName: z
     .string({ required_error: "First name is required" })
     .trim()
-    .min(1, {
-      message: "First name must be at least 1 character",
-    })
-    .max(255, {
-      message: "First name must not be more than 255 characters long",
-    })
-    .regex(/^[a-zA-Z\s]*$/, {
-      message: "First name must only contain letters and spaces",
-    }),
+    .min(1, "First name must be at least 1 character")
+    .max(255, "First name must not be more than 255 characters long")
+    .regex(/^[a-zA-Z\s]*$/, "First name must only contain letters and spaces"),
   lastName: z
     .string({ required_error: "Last name is required" })
     .trim()
-    .min(1, {
-      message: "Last name must be at least 1 character",
-    })
-    .max(255, {
-      message: "Last name must not be more than 255 characters long",
-    })
-    .regex(/^[a-zA-Z\s]*$/, {
-      message: "First name must only contain letters and spaces",
-    }),
+    .min(1, "Last name must be at least 1 character")
+    .max(255, "Last name must not be more than 255 characters long")
+    .regex(/^[a-zA-Z\s]*$/, "First name must only contain letters and spaces"),
   username: z
     .string({ required_error: "Username is required" })
     .trim()
-    .min(3, {
-      message: "Username must be at least 3 characters",
-    })
-    .max(255, {
-      message: "Username must not be more than 255 characters long",
-    })
-    .regex(/^[a-zA-Z0-9]*$/, {
-      message: "Username must only contain letters and numbers",
-    }),
+    .min(3, "Username must be at least 3 characters")
+    .max(255, "Username must not be more than 255 characters long")
+    .regex(/^[a-zA-Z0-9]*$/, "Username must only contain letters and numbers"),
   email: z
     .string({ required_error: "Email is required" })
     .trim()
-    .min(3, {
-      message: "Email must be at least 3 characters",
-    })
-    .regex(OWASP_EMAIL_REGEX, {
-      message: "Invalid email address",
-    })
-    .refine(checkEmailLength, {
-      message: "Local part and domain part must be 64 and 255 bytes or less",
-    }),
+    .min(3, "Email must be at least 3 characters")
+    .regex(OWASP_EMAIL_REGEX, "Invalid email address")
+    .refine(
+      checkEmailLength,
+      "Local part and domain part must be 64 and 255 bytes or less",
+    ),
   password: z
     .string()
     .min(8, { message: "Password must be at least 8 characters" }),
@@ -117,15 +96,12 @@ export const loginSchema = z.object({
   email: z
     .string({ required_error: "Email is required" })
     .trim()
-    .min(3, {
-      message: "Email must be at least 3 characters",
-    })
-    .regex(OWASP_EMAIL_REGEX, {
-      message: "Invalid email address",
-    })
-    .refine(checkEmailLength, {
-      message: "Local part and domain part must be 64 and 255 bytes or less",
-    }),
+    .min(3, "Email must be at least 3 characters")
+    .regex(OWASP_EMAIL_REGEX, "Invalid email address")
+    .refine(
+      checkEmailLength,
+      "Local part and domain part must be 64 and 255 bytes or less",
+    ),
   password: z
     .string()
     .min(8, { message: "Password must be at least 8 characters" }),
@@ -138,15 +114,12 @@ export const forgotPasswordSchema = // z.object({
   z
     .string({ required_error: "Email is required" })
     .trim()
-    .min(3, {
-      message: "Email must be at least 3 characters",
-    })
-    .regex(OWASP_EMAIL_REGEX, {
-      message: "Invalid email address",
-    })
-    .refine(checkEmailLength, {
-      message: "Local part and domain part must be 64 and 255 bytes or less",
-    });
+    .min(3, "Email must be at least 3 characters")
+    .regex(OWASP_EMAIL_REGEX, "Invalid email address")
+    .refine(
+      checkEmailLength,
+      "Local part and domain part must be 64 and 255 bytes or less",
+    );
 // });
 export type ForgotPasswordInput = z.infer<typeof forgotPasswordSchema>;
 
