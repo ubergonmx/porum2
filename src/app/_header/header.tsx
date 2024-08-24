@@ -1,6 +1,5 @@
 import { APP_TITLE, Paths } from "@/lib/constants";
 import Link from "next/link";
-import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -16,7 +15,8 @@ import { UserAvatar } from "@/components/user-avatar";
 import { SignOutItem } from "./sign-out-item";
 import { Suspense } from "react";
 import { HeaderActionsFallback } from "./header-actions-fallback";
-import icon from "@/assets/icon.png";
+import LottiePlayer from "@/components/lazy-lottie";
+import iconAnimation from "@/assets/icon.json";
 
 export default async function Header() {
   return (
@@ -26,12 +26,16 @@ export default async function Header() {
           href={Paths.Home}
           className="flex items-center gap-2 text-lg font-semibold md:text-base"
         >
-          <Image
+          {/* <Image
             className="size-8 rounded"
             width="50"
             height="50"
             src={icon}
             alt="logo"
+          /> */}
+          <LottiePlayer
+            animationData={iconAnimation}
+            style={{ width: "50px", height: "50px" }}
           />
           <span className="hidden text-sm font-medium text-zinc-700 md:block">
             {APP_TITLE}
