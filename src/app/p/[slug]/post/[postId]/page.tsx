@@ -1,4 +1,4 @@
-// import CommentsSection from "@/components/CommentsSection";
+import CommentsSection from "@/components/comments/comment-section";
 import EditorOutput from "@/components/editor-output";
 import PostVoteServer from "@/components/post-vote/server";
 import { buttonVariants } from "@/components/ui/button";
@@ -74,7 +74,7 @@ const SubPorumPostPage = async ({ params }: SubPorumPostPageProps) => {
           <Suspense
             fallback={<Loader2 className="size-5 animate-spin text-zinc-500" />}
           >
-            {/* <CommentsSection postId={post?.id ?? cachedPost.id} /> */}
+            <CommentsSection postId={post?.id ?? cachedPost.id} />
           </Suspense>
         </div>
       </div>

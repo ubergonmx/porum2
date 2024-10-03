@@ -259,6 +259,10 @@ export const commentsRelations = relations(comments, ({ one, many }) => ({
   replyTo: one(comments, {
     fields: [comments.replyToId],
     references: [comments.id],
+    relationName: "comment_replies",
+  }),
+  replies: many(comments, {
+    relationName: "comment_replies",
   }),
 }));
 
