@@ -1,7 +1,7 @@
 "use client";
 
 import { SubmitButton } from "@/components/submit-button";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { useTransition } from "react";
 import { subscribeSubporum, unsubscribeSubporum } from "./actions";
 import { useRouter } from "next/navigation";

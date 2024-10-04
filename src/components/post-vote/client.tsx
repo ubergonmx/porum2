@@ -6,7 +6,7 @@ import { VoteType } from "@/db/schema";
 import { useMutation } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
 import { useEffect, useState } from "react";
-import { toast } from "../ui/use-toast";
+import { toast } from "../../hooks/use-toast";
 import { Button } from "../ui/button";
 import { ArrowBigDown, ArrowBigUp } from "lucide-react";
 import { cn } from "@/lib/utils";

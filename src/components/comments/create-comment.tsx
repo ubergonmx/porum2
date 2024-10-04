@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { toast } from "@/components/ui/use-toast";
+import { toast } from "@/hooks/use-toast";
 import { CommentRequest } from "@/lib/validators/comment";
 
 import { useCustomToasts } from "@/hooks/use-custom-toasts";

@@ -14,7 +14,7 @@ import { UserAvatar } from "../user-avatar";
 import { Button } from "../ui/button";
 import { Label } from "../ui/label";
 import { Textarea } from "../ui/textarea";
-import { toast } from "../ui/use-toast";
+import { toast } from "../../hooks/use-toast";
 
 type ExtendedComment = Comment & {
   votes: CommentVote[];

@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { useFormState } from "react-dom";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { SubmitButton } from "@/components/submit-button";
 import { PasswordInput } from "@/components/password-input";
 import { Label } from "@/components/ui/label";

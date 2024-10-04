@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@radix-ui/react-label";
 import { useEffect, useRef, useState } from "react";
 import { useFormState } from "react-dom";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { verifyEmail, resendVerificationEmail as resendEmail } from "./actions";
 import { logout } from "@/app/_header/actions";
 import { SubmitButton } from "@/components/submit-button";
