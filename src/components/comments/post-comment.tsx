@@ -6,7 +6,7 @@ import { CommentRequest } from "@/lib/validators/comment";
 import { Comment, CommentVote, User } from "@/db/schema";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
-import { MessageSquare } from "lucide-react";
+import { Loader2Icon, MessageSquare } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { FC, useRef, useState } from "react";
 import CommentVotes from "./comment-votes";
@@ -149,6 +149,9 @@ const PostComment: FC<PostCommentProps> = ({
                   });
                 }}
               >
+                {isPending && (
+                  <Loader2Icon className="mr-2 size-4 animate-spin" />
+                )}
                 Post
               </Button>
             </div>

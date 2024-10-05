@@ -20,7 +20,7 @@ import iconAnimation from "@/assets/icon.json";
 
 export default async function Header() {
   return (
-    <header className="sticky top-0 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6">
+    <header className="sticky top-0 z-50 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6">
       <nav className="container mx-auto flex h-full max-w-7xl items-center justify-between gap-2">
         <Link
           href={Paths.Home}

@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation";
 import { FC, useState } from "react";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Loader2Icon } from "lucide-react";
 
 interface CreateCommentProps {
   postId: string;
@@ -70,6 +71,7 @@ const CreateComment: FC<CreateCommentProps> = ({ postId, replyToId }) => {
             disabled={input.length === 0}
             onClick={() => comment({ postId, text: input, replyToId })}
           >
+            {isPending && <Loader2Icon className="mr-2 size-4 animate-spin" />}
             Post
           </Button>
         </div>
